@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Droplets, BookOpen, HeartPulse, Users } from 'lucide-react'
-import { IMAGES } from '../utils/images'
+import { IMAGES, imgFallback } from '../utils/images'
 import { splitMetric } from '../data/ngoData'
 
 const ICONS = [Droplets, BookOpen, HeartPulse, Users]
@@ -45,13 +45,19 @@ export default function ImpactStats({ site }) {
   return (
     <section
       id="impact"
-      className="relative section-block parallax-bg"
-      style={{
-        backgroundImage: `url(${site?.images?.hero || IMAGES.hero})`,
-      }}
+      className="relative section-block impact-section"
     >
-      {/* Dark overlay */}
-      <div className="absolute inset-0" style={{ background: 'rgba(6,13,9,0.88)' }} />
+      <img
+        src={site?.images?.hero || IMAGES.hero}
+        alt=""
+        data-fallback-src={site?.images?.fallback}
+        onError={imgFallback}
+        className="impact-bg-image"
+        loading="lazy"
+        decoding="async"
+        aria-hidden="true"
+      />
+      <div className="impact-bg-overlay" />
 
       <div className="relative z-10 section-container">
         {/* Section label */}
@@ -81,7 +87,7 @@ export default function ImpactStats({ site }) {
           {stats.map(({ icon: Icon, value, suffix, label, sub }, i) => (
             <motion.div
               key={label}
-              className="premium-card equal-card flex min-h-[250px] flex-col items-center justify-center text-center p-8 lg:p-10"
+              className="premium-card impact-card equal-card flex min-h-[250px] flex-col items-center justify-center text-center p-8 lg:p-10"
               style={{
                 borderRadius: '16px',
                 transition: 'border-color 0.3s ease, box-shadow 0.3s ease',

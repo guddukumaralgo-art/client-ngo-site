@@ -12,14 +12,15 @@ export default function About({ site }) {
   const impacts = site?.impacts || []
   const primaryImpact = impacts[0]?.number || '50K+'
   const secondaryImpact = impacts[1]?.number || '200+'
+  const reverseLayout = site?.layoutVariant === 1
 
   return (
     <section id="about" className="section-block section-light">
       <div className="section-container">
-        <div className="grid md:grid-cols-2 gap-10 lg:gap-16 items-center">
+        <div className={`about-grid ${reverseLayout ? 'about-grid--reverse' : ''}`}>
 
           {/* Image with decorative border */}
-          <motion.div {...fadeLeft} className="relative px-2 sm:px-0">
+          <motion.div {...fadeLeft} className="about-image-shell">
             {/* Decorative green gradient bg behind image */}
             <div
               className="absolute rounded-3xl"
@@ -47,13 +48,18 @@ export default function About({ site }) {
               onError={imgFallback}
               className="relative z-10 w-full rounded-3xl object-cover shadow-2xl"
               style={{ aspectRatio: '4/5', maxHeight: '560px' }}
+              loading="lazy"
+              decoding="async"
             />
-            {/* Gold accent dot */}
-            <div
-              className="absolute z-20 bottom-8 right-2 sm:-right-4 w-14 h-14 rounded-full flex items-center justify-center shadow-lg"
-              style={{ background: `linear-gradient(135deg, ${accent}, #dbc474)` }}
-            >
-              <span className="text-[#0a0f0d] text-xl font-bold">✦</span>
+            <div className="about-profile-medallion" style={{ borderColor: accent }}>
+              <img
+                src={site?.images?.profile}
+                alt=""
+                data-fallback-src={site?.images?.fallback}
+                onError={imgFallback}
+                loading="lazy"
+                decoding="async"
+              />
             </div>
           </motion.div>
 
@@ -87,9 +93,9 @@ export default function About({ site }) {
             </p>
 
             {/* Key stats inline */}
-            <div className="grid grid-cols-3 gap-4 pt-2">
+            <div className="about-metric-grid">
               {impacts.slice(0, 3).map(({ number, label }) => (
-                <div key={label} className="flex flex-col gap-1">
+                <div key={label} className="about-metric-card">
                   <span className="font-sans font-extrabold text-3xl" style={{ color: accent }}>{number}</span>
                   <span className="font-body text-xs" style={{ color: '#697268' }}>{label}</span>
                 </div>

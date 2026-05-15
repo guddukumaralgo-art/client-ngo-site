@@ -38,6 +38,8 @@ export default function Cause({ site }) {
         data-fallback-src={site?.images?.fallback}
         onError={imgFallback}
         className="absolute inset-0 w-full h-full object-cover"
+        loading="lazy"
+        decoding="async"
       />
       <div className="absolute inset-0" style={{ background: 'rgba(6,13,9,0.90)' }} />
 
@@ -117,15 +119,17 @@ export default function Cause({ site }) {
           viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.6 }}
         >
+          <p className="font-body text-center text-sm leading-relaxed text-white/65">
+            Every contribution helps this mission reach one more family.
+          </p>
           <a
             {...donateProps}
             className="premium-button premium-button--gold"
           >
             <HeartHandshake size={18} />
-            <span>{site?.donationCta || 'Donate Now ₹'}</span>
+            <span>Support This Cause</span>
           </a>
 
-          {/* 80G badge */}
           <div
             className="inline-flex max-w-full items-center justify-center gap-2 px-5 py-2.5 rounded-full text-center"
             style={{
@@ -136,7 +140,7 @@ export default function Cause({ site }) {
           >
             <ShieldCheck size={16} style={{ color: accent }} />
             <span className="font-body text-sm font-medium text-white/80">
-              80G Tax Exemption Available • FCRA Registered
+              Outreach concept with donor-friendly storytelling and clear contact paths.
             </span>
           </div>
         </motion.div>

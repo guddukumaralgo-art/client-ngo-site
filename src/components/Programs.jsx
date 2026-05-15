@@ -4,7 +4,7 @@ import { imgFallback } from '../utils/images'
 function ProgramCard({ prog, large = false, delay = 0, accent = '#c9a84c' }) {
   return (
     <motion.div
-      className="relative overflow-hidden group cursor-pointer"
+      className={`program-card relative overflow-hidden group cursor-pointer ${large ? 'program-card--featured' : ''}`}
       style={{
         minHeight: large ? '500px' : '270px',
         height: '100%',
@@ -16,7 +16,7 @@ function ProgramCard({ prog, large = false, delay = 0, accent = '#c9a84c' }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-80px' }}
       transition={{ delay, duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
-      whileHover={{ scale: 1.03, transition: { duration: 0.3 } }}
+      whileHover={{ y: -6, transition: { duration: 0.3 } }}
       onMouseEnter={(e) => (e.currentTarget.style.boxShadow = '0 20px 60px rgba(0,0,0,0.5)')}
       onMouseLeave={(e) => (e.currentTarget.style.boxShadow = '0 4px 24px rgba(0,0,0,0.3)')}
     >
@@ -27,6 +27,8 @@ function ProgramCard({ prog, large = false, delay = 0, accent = '#c9a84c' }) {
         data-fallback-src={prog.fallback}
         onError={imgFallback}
         className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.08]"
+        loading="lazy"
+        decoding="async"
       />
       {/* Gradient overlay — transparent to dark */}
       <div
@@ -47,9 +49,9 @@ function ProgramCard({ prog, large = false, delay = 0, accent = '#c9a84c' }) {
         >
           {prog.title}
         </h3>
-        {large && (
-          <p className="font-body text-white/65 text-sm leading-relaxed max-w-2xl">{prog.desc}</p>
-        )}
+        <p className={`program-card-desc font-body text-white/65 text-sm leading-relaxed max-w-2xl ${large ? '' : 'program-card-desc--compact'}`}>
+          {prog.desc}
+        </p>
       </div>
     </motion.div>
   )
@@ -58,7 +60,9 @@ function ProgramCard({ prog, large = false, delay = 0, accent = '#c9a84c' }) {
 export default function Programs({ site }) {
   const programs = site?.programs || []
   const accent = site?.theme?.accent || '#c9a84c'
-  const [large, ...rest] = programs
+  const featuredIndex = site?.layoutVariant === 2 && programs[1] ? 1 : 0
+  const large = programs[featuredIndex]
+  const rest = programs.filter((_, index) => index !== featuredIndex)
   const stacked = rest.slice(0, 2)
   const bottom = rest.slice(2)
 

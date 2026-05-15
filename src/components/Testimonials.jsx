@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Quote } from 'lucide-react'
 import { initialsFromName } from '../data/ngoData'
 
 const INTERVAL = 5000
@@ -72,32 +73,7 @@ export default function Testimonials({ site }) {
             padding: 'clamp(28px, 5%, 48px)',
           }}
         >
-          {/* Decorative gold SVG quote mark */}
-          <svg
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 120 90"
-            style={{
-              position: 'absolute',
-              top: '16px',
-              left: '28px',
-              width: '80px',
-              height: '60px',
-              pointerEvents: 'none',
-            }}
-          >
-            <text
-              x="0"
-              y="82"
-              fontSize="120"
-              fontFamily="Georgia, 'Times New Roman', serif"
-              fontWeight="bold"
-              fill="#c9a84c"
-              fillOpacity="0.45"
-            >
-              "
-            </text>
-          </svg>
+          <Quote className="testimonial-quote-mark" aria-hidden="true" />
 
           <AnimatePresence mode="wait">
             <motion.div

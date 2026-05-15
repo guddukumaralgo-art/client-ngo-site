@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowRight, HeartHandshake } from 'lucide-react'
+import { ArrowRight, BadgeCheck, HeartHandshake, ShieldCheck, UsersRound } from 'lucide-react'
 import { IMAGES, imgFallback } from '../utils/images'
 import { splitMetric } from '../data/ngoData'
 import { internalScrollProps } from '../utils/links'
@@ -43,14 +43,21 @@ const headlineWords = (headline) => String(headline || 'Empowering Rural India,'
 
 export default function Hero({ site }) {
   const accent = site?.theme?.accent || '#c9a84c'
+  const primary = site?.theme?.primary || '#0a6847'
   const stats = (site?.impacts || []).slice(0, 4).map((impact) => ({
     ...splitMetric(impact.number),
     label: impact.label,
   }))
   const donateProps = internalScrollProps(site?.contact?.donateLink, 'cause')
+  const programProps = internalScrollProps('#programs', 'programs')
+  const trustBadges = [
+    { label: 'Community Impact', icon: UsersRound },
+    { label: 'Verified Concept', icon: BadgeCheck },
+    { label: 'Built for Outreach', icon: ShieldCheck },
+  ]
 
   return (
-    <section id="home" className="hero-section">
+    <section id="home" className="hero-section" style={{ '--hero-accent': accent, '--hero-primary': primary }}>
       {/* BG image with Ken Burns */}
       <div className="absolute inset-0 overflow-hidden">
         <img
@@ -58,8 +65,10 @@ export default function Hero({ site }) {
           alt={`${site?.ngoName || 'NGO'} hero`}
           data-fallback-src={site?.images?.fallback}
           onError={imgFallback}
-          className="w-full h-[110%] object-cover ken-burns"
+          className="w-full h-[110%] object-cover ken-burns hero-bg-image"
           style={{ transformOrigin: 'center center' }}
+          loading="eager"
+          decoding="async"
         />
         <div
           className="absolute inset-0"
@@ -83,7 +92,7 @@ export default function Hero({ site }) {
           <span
             className="section-label"
             style={{
-              color: '#c9a84c',
+              color: accent,
               borderColor: 'rgba(201,168,76,0.35)',
               background: 'rgba(201,168,76,0.1)',
               border: '1px solid rgba(201,168,76,0.35)',
@@ -104,6 +113,8 @@ export default function Hero({ site }) {
             alt={`${site?.ngoName || 'NGO'} profile`}
             data-fallback-src={site?.images?.fallback}
             onError={imgFallback}
+            loading="eager"
+            decoding="async"
           />
           <div>
             <span>{site?.ngoName || 'NGO'}</span>
@@ -127,7 +138,7 @@ export default function Hero({ site }) {
             ))}
           </div>
           <motion.span
-            className="hero-title-accent shimmer-text italic inline-block"
+            className="hero-title-accent hero-highlight-text italic inline-block"
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 + headlineWords(site?.heroHeadline).length * 0.15, duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
@@ -146,32 +157,51 @@ export default function Hero({ site }) {
           {site?.heroSubheadline || 'Delivering clean water, education, healthcare and women empowerment across 200+ villages in rural India.'}
         </motion.p>
 
+        <motion.div
+          className="hero-trust-row"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1, duration: 0.55 }}
+        >
+          {trustBadges.map(({ label, icon: Icon }) => (
+            <span key={label} className="hero-trust-badge">
+              <Icon size={15} />
+              {label}
+            </span>
+          ))}
+        </motion.div>
+
         {/* Buttons */}
         <motion.div
-          className="inline-flex w-full flex-wrap gap-4 sm:w-auto"
+          className="hero-actions"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.1, duration: 0.6 }}
         >
           <a
-            href="#about"
-            className="premium-button premium-button--ghost"
-            onClick={(event) => {
-              event.preventDefault()
-              document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })
-            }}
-          >
-            <span>Our Mission</span>
-            <ArrowRight size={17} />
-          </a>
-          <a
             {...donateProps}
             className="premium-button premium-button--gold"
           >
             <HeartHandshake size={18} />
-            <span>{site?.donationCta || 'Donate Now ₹'}</span>
+            <span>Support This Cause</span>
+          </a>
+          <a
+            {...programProps}
+            className="premium-button premium-button--ghost"
+          >
+            <span>See Our Programs</span>
+            <ArrowRight size={17} />
           </a>
         </motion.div>
+
+        <motion.p
+          className="hero-cta-note"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.25, duration: 0.6 }}
+        >
+          Every contribution helps this mission reach one more family.
+        </motion.p>
       </div>
 
       {/* Stats bar */}

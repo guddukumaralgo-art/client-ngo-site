@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { initialsFromName } from '../data/ngoData'
+import { imgFallback } from '../utils/images'
 
 export default function Team({ site }) {
   const team = site?.team || []
@@ -29,6 +30,7 @@ export default function Team({ site }) {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {team.map(({ name, role, bio }, index) => {
             const color = colors[index % colors.length]
+            const useProfileImage = index === 0 && site?.images?.hasProfileImage
             return (
               <motion.div
               key={name}
@@ -48,7 +50,7 @@ export default function Team({ site }) {
             >
               {/* Avatar */}
               <div
-                className="icon-box w-20 h-20 rounded-full font-sans font-extrabold text-white text-2xl mb-6"
+                className="team-avatar icon-box w-20 h-20 rounded-full font-sans font-extrabold text-white text-2xl mb-6"
                 style={{
                   background: `linear-gradient(135deg, ${color}, ${color}aa)`,
                   border: '3px solid transparent',
@@ -64,7 +66,18 @@ export default function Team({ site }) {
                   e.currentTarget.style.boxShadow = 'none'
                 }}
               >
-                {initialsFromName(name)}
+                {useProfileImage ? (
+                  <img
+                    src={site.images.profile}
+                    alt={`${name} profile`}
+                    data-fallback-src={site.images.fallback}
+                    onError={imgFallback}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                ) : (
+                  initialsFromName(name)
+                )}
               </div>
 
               <div

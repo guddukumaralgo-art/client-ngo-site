@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { ArrowRight, MapPin } from 'lucide-react'
+import { ArrowRight, BadgeCheck, Database, Layers, MapPin, Smartphone, Sparkles } from 'lucide-react'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import Marquee from './components/Marquee'
@@ -20,54 +20,103 @@ import { DEFAULT_FAVICON_HREF, setDynamicFavicon } from './utils/favicon'
 const getRouteSlug = () => window.location.hash.replace(/^#\/?/, '').split('?')[0].trim()
 
 function Gallery({ sites }) {
+  const galleryStats = [
+    { value: `${sites.length}+`, label: 'NGO Concepts', icon: Layers },
+    { value: 'CSV', label: 'Generated', icon: Database },
+    { value: 'Mobile', label: 'Ready', icon: Smartphone },
+    { value: 'Premium', label: 'Landing Pages', icon: Sparkles },
+  ]
+
   return (
     <main className="gallery-page">
       <section className="section-container gallery-shell">
         <div className="gallery-hero">
-          <h1 className="gallery-title">NGO Website Batch Gallery</h1>
-          <div className="gallery-summary" aria-label={`${sites.length} ready/live websites`}>
-            <strong>{sites.length}</strong>
-            <span>ready/live websites</span>
+          <div className="gallery-kicker">
+            <BadgeCheck size={16} />
+            <span>Premium NGO Website Portfolio</span>
+          </div>
+          <div className="gallery-hero-grid">
+            <div>
+              <h1 className="gallery-title">
+                Digital homes for causes that deserve trust.
+              </h1>
+              <p className="gallery-copy">
+                A curated batch of emotionally grounded NGO landing pages, shaped for donor confidence,
+                community storytelling, and polished mobile outreach.
+              </p>
+            </div>
+            <div className="gallery-summary" aria-label={`${sites.length} ready/live websites`}>
+              <strong>{sites.length}</strong>
+              <span>ready and live concepts</span>
+            </div>
+          </div>
+
+          <div className="gallery-stats-strip" aria-label="Gallery highlights">
+            {galleryStats.map(({ value, label, icon: Icon }) => (
+              <div className="gallery-stat-pill" key={label}>
+                <Icon size={17} />
+                <span>
+                  <strong>{value}</strong>
+                  {label}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
 
         <div className="gallery-grid">
-          {sites.map((site, index) => (
-            <a
-              key={site.slug}
-              href={`#/${site.slug}`}
-              className="premium-card gallery-card"
-              style={{ '--card-accent': site.theme.accent, '--card-primary': site.theme.primary }}
-            >
-              <div className="gallery-card-media">
-                <img
-                  src={site.images.gallery}
-                  alt={`${site.ngoName} preview`}
-                  data-fallback-src={site.images.fallback}
-                  onError={imgFallback}
-                />
-                <div />
-                <span>{site.status}</span>
-              </div>
+          {sites.map((site, index) => {
+            const statusLabel = site.status === 'live' ? 'Live' : 'Ready'
 
-              <div className="gallery-card-body">
-                <div className="gallery-card-meta">
-                  <span>{site.batch}</span>
-                  <span>Site {String(index + 1).padStart(2, '0')}</span>
+            return (
+              <a
+                key={site.slug}
+                href={`#/${site.slug}`}
+                className="premium-card gallery-card"
+                style={{ '--card-accent': site.theme.accent, '--card-primary': site.theme.primary }}
+              >
+                <div className="gallery-card-media">
+                  <img
+                    src={site.images.gallery}
+                    alt={`${site.ngoName} preview`}
+                    data-fallback-src={site.images.fallback}
+                    onError={imgFallback}
+                    loading={index < 6 ? 'eager' : 'lazy'}
+                    decoding="async"
+                  />
+                  <div />
+                  <span className="gallery-status">{statusLabel}</span>
+                  <span className="gallery-card-logo" aria-hidden="true">
+                    <img
+                      src={site.images.profile}
+                      alt=""
+                      data-fallback-src={site.images.fallback}
+                      onError={imgFallback}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </span>
                 </div>
-                <h2>{site.ngoName}</h2>
-                <p>{site.tagline}</p>
-                <div className="gallery-location">
-                  <MapPin size={15} />
-                  <span>{site.location}</span>
+
+                <div className="gallery-card-body">
+                  <div className="gallery-card-meta">
+                    <span>{site.batch}</span>
+                    <span>Concept {String(index + 1).padStart(2, '0')}</span>
+                  </div>
+                  <h2>{site.ngoName}</h2>
+                  <p>{site.tagline}</p>
+                  <div className="gallery-location">
+                    <MapPin size={15} />
+                    <span>{site.location}</span>
+                  </div>
+                  <div className="premium-button premium-button--gold gallery-button">
+                    <span>View Website</span>
+                    <ArrowRight size={16} />
+                  </div>
                 </div>
-                <div className="premium-button premium-button--gold gallery-button">
-                  <span>View Website</span>
-                  <ArrowRight size={16} />
-                </div>
-              </div>
-            </a>
-          ))}
+              </a>
+            )
+          })}
         </div>
       </section>
     </main>
@@ -146,8 +195,8 @@ export default function App() {
     return (
       <main className="gallery-page">
         <section className="section-container gallery-shell gallery-loading">
-          <span className="section-label gallery-label">Loading CSV</span>
-          <h1 className="gallery-title">Preparing NGO websites...</h1>
+          <span className="section-label gallery-label">Preparing Gallery</span>
+          <h1 className="gallery-title">Opening the NGO portfolio...</h1>
         </section>
       </main>
     )

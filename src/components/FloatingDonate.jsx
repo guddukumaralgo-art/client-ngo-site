@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Heart } from 'lucide-react'
+import { HeartHandshake } from 'lucide-react'
 import { internalScrollProps } from '../utils/links'
 
 export default function FloatingDonate({ site }) {
@@ -38,8 +38,8 @@ export default function FloatingDonate({ site }) {
           transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
           whileHover={{ scale: 1.06 }}
         >
-          <Heart size={16} fill="currentColor" className="relative z-10" />
-          <span className="relative z-10">{site?.donationCta || 'Donate ₹'}</span>
+          <HeartHandshake size={16} className="relative z-10" />
+          <span className="relative z-10">Support This Cause</span>
         </motion.a>
       )}
     </AnimatePresence>

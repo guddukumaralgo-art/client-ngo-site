@@ -56,6 +56,8 @@ export default function Navbar({ site }) {
               className="nav-brand-avatar"
               data-fallback-src={site?.images?.fallback}
               onError={imgFallback}
+              loading="eager"
+              decoding="async"
             />
             <span className="nav-brand-name">
               <span className="text-white">{brand.first}</span>
@@ -64,7 +66,7 @@ export default function Navbar({ site }) {
           </a>
 
           {/* Desktop links */}
-          <ul className="site-nav-links hidden md:flex">
+          <ul className="site-nav-links">
             {links.map((l) => (
               <li key={l}>
                 <a
@@ -86,12 +88,12 @@ export default function Navbar({ site }) {
             {...donateProps}
             className="nav-donate premium-button premium-button--gold premium-button--small"
           >
-            <span>{site?.donationCta?.replace(/\s*₹$/, '') || 'Donate Now'}</span>
+            <span>Support</span>
           </a>
 
           {/* Hamburger */}
           <button
-            className="md:hidden text-white p-2 flex items-center justify-center"
+            className="nav-menu-button text-white p-2 flex items-center justify-center"
             onClick={() => setOpen(true)}
             aria-label="Open menu"
           >
@@ -145,7 +147,7 @@ export default function Navbar({ site }) {
                   setOpen(false)
                 }}
               >
-                {site?.donationCta || 'Donate Now ₹'}
+                Support This Cause
               </motion.a>
             </div>
           </motion.div>

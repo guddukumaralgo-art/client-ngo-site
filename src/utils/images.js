@@ -2,6 +2,7 @@ import { DEFAULT_CATEGORY_FALLBACK } from './imageFallbacks'
 
 export const FALLBACK_IMAGE = DEFAULT_CATEGORY_FALLBACK
 export const FALLBACK_BANNER = DEFAULT_CATEGORY_FALLBACK
+export const FINAL_FALLBACK_IMAGE = `${import.meta.env?.BASE_URL || '/'}fallback-ngo.svg`
 
 export const IMAGES = {
   hero: 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=1920&q=80',
@@ -18,13 +19,17 @@ export const IMAGES = {
 
 export const imgFallback = (e) => {
   const target = e.currentTarget
-  const fallback = e.currentTarget.dataset.fallbackSrc || FALLBACK_IMAGE
-  const finalFallback = target.dataset.finalFallbackSrc || FALLBACK_IMAGE
+  const fallback = target.dataset.fallbackSrc || FALLBACK_IMAGE
+  const finalFallback = target.dataset.finalFallbackSrc || FINAL_FALLBACK_IMAGE
 
-  if (target.src !== fallback) {
+  if (target.dataset.fallbackAttempted !== 'true') {
+    target.dataset.fallbackAttempted = 'true'
     target.src = fallback
     return
   }
 
-  if (target.src !== finalFallback) target.src = finalFallback
+  if (target.dataset.finalFallbackAttempted !== 'true') {
+    target.dataset.finalFallbackAttempted = 'true'
+    target.src = finalFallback
+  }
 }

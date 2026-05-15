@@ -1,12 +1,16 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Send } from 'lucide-react'
+import { HeartHandshake, Mail, MapPin, Phone, Send } from 'lucide-react'
 import { IMAGES, imgFallback } from '../utils/images'
+import { internalScrollProps } from '../utils/links'
 
 export default function Newsletter({ site }) {
   const [email, setEmail] = useState('')
   const [sent, setSent] = useState(false)
   const accent = site?.theme?.accent || '#c9a84c'
+  const contact = site?.contact || {}
+  const donateProps = internalScrollProps(contact.donateLink, 'cause')
+  const contactProps = internalScrollProps(contact.contactLink, 'contact')
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -22,11 +26,14 @@ export default function Newsletter({ site }) {
         data-fallback-src={site?.images?.fallback}
         onError={imgFallback}
         className="absolute inset-0 w-full h-full object-cover"
+        loading="lazy"
+        decoding="async"
       />
       <div className="absolute inset-0" style={{ background: 'rgba(6,13,9,0.88)' }} />
 
-      <div className="relative z-10 section-container text-center" style={{ maxWidth: '980px' }}>
-        <div>
+      <div className="relative z-10 section-container" style={{ maxWidth: '1080px' }}>
+        <div className="newsletter-panel">
+          <div className="text-center">
           <span
             className="section-label"
             style={{ color: accent, background: 'rgba(201,168,76,0.1)', border: '1px solid rgba(201,168,76,0.25)' }}
@@ -39,6 +46,25 @@ export default function Newsletter({ site }) {
           <p className="section-copy font-body text-white/55 mt-4 mb-10">
             Get impact reports, field stories and campaign updates from {site?.location || 'our communities'} straight to your inbox.
           </p>
+          </div>
+
+          <div className="newsletter-contact-grid">
+            <div className="newsletter-contact-card">
+              <Mail size={18} />
+              <span>Email</span>
+              <a href={`mailto:${contact.email || ''}`}>{contact.email || 'hello@example.org'}</a>
+            </div>
+            <div className="newsletter-contact-card">
+              <Phone size={18} />
+              <span>Phone</span>
+              <p>{contact.phone || '+91 00 0000 0000'}</p>
+            </div>
+            <div className="newsletter-contact-card">
+              <MapPin size={18} />
+              <span>Location</span>
+              <p>{contact.address || site?.location || 'India'}</p>
+            </div>
+          </div>
 
           {sent ? (
             <motion.div
@@ -47,7 +73,7 @@ export default function Newsletter({ site }) {
               className="font-sans font-bold text-[#0a0f0d] inline-block"
               style={{ background: accent, borderRadius: '12px', padding: '16px 32px' }}
             >
-              ✓ Thank you — you're on the list!
+              Thank you - you're on the list.
             </motion.div>
           ) : (
             <form
@@ -94,6 +120,16 @@ export default function Newsletter({ site }) {
               </button>
             </form>
           )}
+
+          <div className="newsletter-cta-row">
+            <a {...donateProps} className="premium-button premium-button--gold">
+              <HeartHandshake size={18} />
+              <span>Support This Cause</span>
+            </a>
+            <a {...contactProps} className="premium-button premium-button--ghost">
+              <span>Start a Conversation</span>
+            </a>
+          </div>
 
           <p className="font-body text-xs mt-6 mb-2" style={{ color: 'rgba(255,255,255,0.35)' }}>
             We respect your privacy. Unsubscribe anytime. No spam, ever.

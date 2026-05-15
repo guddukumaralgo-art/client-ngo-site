@@ -251,6 +251,8 @@ export const normalizeClient = (row, index = 0) => {
   const ngoName = clean(row.ngo_name, DEFAULT_SITE.ngoName)
   const hasProfileImage = Boolean(clean(row.client_profile_image_url))
   const hasLogoImage = Boolean(clean(row.logo_url))
+  const donateLink = firstFilled(row.donate_link, row.contact_link, DEFAULT_SITE.contact.donateLink)
+  const contactLink = firstFilled(row.contact_link, row.donate_link, DEFAULT_SITE.contact.contactLink)
   const profileImage = imageFrom(
     [row.client_profile_image_url, row.logo_url, row.hero_image_url],
     fallbackImage
@@ -308,11 +310,12 @@ export const normalizeClient = (row, index = 0) => {
       email: clean(row.email, DEFAULT_SITE.contact.email),
       phone: clean(row.phone, DEFAULT_SITE.contact.phone),
       address: clean(row.address, DEFAULT_SITE.contact.address),
-      donateLink: clean(row.donate_link, DEFAULT_SITE.contact.donateLink),
-      contactLink: clean(row.contact_link, DEFAULT_SITE.contact.contactLink),
+      donateLink,
+      contactLink,
     },
     batch: clean(row.batch, 'batch 1'),
     status: clean(row.status, 'draft').toLowerCase(),
+    layoutVariant: index % 3,
   }
 }
 
