@@ -40,7 +40,12 @@ function Gallery({ sites }) {
               style={{ '--card-accent': site.theme.accent, '--card-primary': site.theme.primary }}
             >
               <div className="gallery-card-media">
-                <img src={site.images.gallery} alt={`${site.ngoName} preview`} onError={imgFallback} />
+                <img
+                  src={site.images.gallery}
+                  alt={`${site.ngoName} preview`}
+                  data-fallback-src={site.images.fallback}
+                  onError={imgFallback}
+                />
                 <div />
                 <span>{site.status}</span>
               </div>

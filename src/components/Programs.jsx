@@ -24,6 +24,7 @@ function ProgramCard({ prog, large = false, delay = 0, accent = '#c9a84c' }) {
       <img
         src={prog.img}
         alt={prog.title}
+        data-fallback-src={prog.fallback}
         onError={imgFallback}
         className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.08]"
       />

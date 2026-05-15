@@ -35,6 +35,7 @@ export default function Footer({ site }) {
                 src={site?.images?.profile}
                 alt={`${site?.ngoName || 'NGO'} profile`}
                 className="footer-brand-avatar"
+                data-fallback-src={site?.images?.fallback}
                 onError={imgFallback}
               />
               <div className="font-sans font-bold text-2xl leading-tight">

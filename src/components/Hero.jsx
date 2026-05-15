@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowRight, HeartHandshake } from 'lucide-react'
-import { FALLBACK_BANNER, IMAGES, imgFallback } from '../utils/images'
+import { IMAGES, imgFallback } from '../utils/images'
 import { splitMetric } from '../data/ngoData'
 import { internalScrollProps } from '../utils/links'
 
@@ -56,7 +56,7 @@ export default function Hero({ site }) {
         <img
           src={site?.images?.hero || IMAGES.hero}
           alt={`${site?.ngoName || 'NGO'} hero`}
-          data-fallback-src={FALLBACK_BANNER}
+          data-fallback-src={site?.images?.fallback}
           onError={imgFallback}
           className="w-full h-[110%] object-cover ken-burns"
           style={{ transformOrigin: 'center center' }}
@@ -102,6 +102,7 @@ export default function Hero({ site }) {
           <img
             src={site?.images?.profile}
             alt={`${site?.ngoName || 'NGO'} profile`}
+            data-fallback-src={site?.images?.fallback}
             onError={imgFallback}
           />
           <div>

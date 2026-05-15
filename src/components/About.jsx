@@ -41,8 +41,9 @@ export default function About({ site }) {
               }}
             />
             <img
-              src={site?.images?.about || IMAGES.about}
+              src={site?.images?.about || site?.images?.fallback || IMAGES.about}
               alt={`${site?.ngoName || 'NGO'} community story`}
+              data-fallback-src={site?.images?.fallback}
               onError={imgFallback}
               className="relative z-10 w-full rounded-3xl object-cover shadow-2xl"
               style={{ aspectRatio: '4/5', maxHeight: '560px' }}

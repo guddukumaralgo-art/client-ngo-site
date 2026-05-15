@@ -1,7 +1,7 @@
-const BASE_URL = import.meta.env?.BASE_URL || '/'
+import { DEFAULT_CATEGORY_FALLBACK } from './imageFallbacks'
 
-export const FALLBACK_IMAGE = `${BASE_URL}fallback-ngo.svg`
-export const FALLBACK_BANNER = `${BASE_URL}fallback-banner.svg`
+export const FALLBACK_IMAGE = DEFAULT_CATEGORY_FALLBACK
+export const FALLBACK_BANNER = DEFAULT_CATEGORY_FALLBACK
 
 export const IMAGES = {
   hero: 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=1920&q=80',
@@ -17,6 +17,14 @@ export const IMAGES = {
 }
 
 export const imgFallback = (e) => {
+  const target = e.currentTarget
   const fallback = e.currentTarget.dataset.fallbackSrc || FALLBACK_IMAGE
-  if (e.currentTarget.src !== fallback) e.currentTarget.src = fallback
+  const finalFallback = target.dataset.finalFallbackSrc || FALLBACK_IMAGE
+
+  if (target.src !== fallback) {
+    target.src = fallback
+    return
+  }
+
+  if (target.src !== finalFallback) target.src = finalFallback
 }

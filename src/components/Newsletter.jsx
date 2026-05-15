@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Send } from 'lucide-react'
-import { FALLBACK_BANNER, IMAGES, imgFallback } from '../utils/images'
+import { IMAGES, imgFallback } from '../utils/images'
 
 export default function Newsletter({ site }) {
   const [email, setEmail] = useState('')
@@ -19,7 +19,7 @@ export default function Newsletter({ site }) {
       <img
         src={site?.images?.newsletter || IMAGES.newsletter}
         alt={`${site?.ngoName || 'NGO'} community updates`}
-        data-fallback-src={FALLBACK_BANNER}
+        data-fallback-src={site?.images?.fallback}
         onError={imgFallback}
         className="absolute inset-0 w-full h-full object-cover"
       />

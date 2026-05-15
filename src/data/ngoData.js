@@ -1,4 +1,5 @@
-import { FALLBACK_BANNER, FALLBACK_IMAGE, IMAGES } from '../utils/images'
+import { FALLBACK_IMAGE, IMAGES } from '../utils/images'
+import { getCategoryFallbackImage } from '../utils/imageFallbacks'
 
 const DEFAULT_COLORS = {
   primary: '#0a6847',
@@ -30,6 +31,7 @@ const DEFAULT_SITE = {
     favicon: '',
     hasProfileImage: false,
     hasLogoImage: false,
+    fallback: FALLBACK_IMAGE,
   },
   programs: [
     {
@@ -206,6 +208,7 @@ export const parseCsv = (text) => {
 }
 
 export const normalizeClient = (row, index = 0) => {
+  const fallbackImage = getCategoryFallbackImage(row)
   const theme = {
     primary: validColor(row.primary_color, DEFAULT_COLORS.primary),
     secondary: validColor(row.secondary_color, DEFAULT_COLORS.secondary),
@@ -213,12 +216,22 @@ export const normalizeClient = (row, index = 0) => {
   }
 
   const programs = [1, 2, 3, 4]
-    .map((n, i) => ({
-      title: clean(row[`program_${n}_title`], DEFAULT_SITE.programs[i]?.title),
-      category: clean(row[`program_${n}_category`], DEFAULT_SITE.programs[i]?.category),
-      desc: clean(row[`program_${n}_description`], DEFAULT_SITE.programs[i]?.desc),
-      img: clean(row[`program_${n}_image_url`], ICON_IMAGES[i] || FALLBACK_IMAGE),
-    }))
+    .map((n, i) => {
+      const programFallback = getCategoryFallbackImage({
+        ...row,
+        category: row[`program_${n}_category`],
+        title: row[`program_${n}_title`],
+        desc: row[`program_${n}_description`],
+      })
+
+      return {
+        title: clean(row[`program_${n}_title`], DEFAULT_SITE.programs[i]?.title),
+        category: clean(row[`program_${n}_category`], DEFAULT_SITE.programs[i]?.category),
+        desc: clean(row[`program_${n}_description`], DEFAULT_SITE.programs[i]?.desc),
+        img: clean(row[`program_${n}_image_url`], ICON_IMAGES[i] || programFallback),
+        fallback: programFallback,
+      }
+    })
     .filter((program) => program.title && program.category)
 
   const impacts = [1, 2, 3, 4].map((n, i) => ({
@@ -240,15 +253,19 @@ export const normalizeClient = (row, index = 0) => {
   const hasLogoImage = Boolean(clean(row.logo_url))
   const profileImage = imageFrom(
     [row.client_profile_image_url, row.logo_url, row.hero_image_url],
-    FALLBACK_IMAGE
+    fallbackImage
   )
   const bannerImage = imageFrom(
     [row.client_banner_image_url, row.hero_image_url, row.program_1_image_url],
-    FALLBACK_BANNER
+    fallbackImage
   )
   const galleryImage = imageFrom(
     [row.client_banner_image_url, row.client_profile_image_url, row.hero_image_url, row.program_1_image_url],
-    FALLBACK_IMAGE
+    fallbackImage
+  )
+  const aboutImage = imageFrom(
+    [row.client_banner_image_url, row.hero_image_url, row.program_1_image_url],
+    fallbackImage
   )
 
   return {
@@ -268,13 +285,14 @@ export const normalizeClient = (row, index = 0) => {
       banner: bannerImage,
       profile: profileImage,
       gallery: galleryImage,
-      about: clean(row.program_2_image_url, DEFAULT_SITE.images.about),
-      donation: clean(row.program_1_image_url, DEFAULT_SITE.images.donation),
+      about: aboutImage,
+      donation: imageFrom([row.program_1_image_url, row.client_banner_image_url, row.hero_image_url], fallbackImage),
       newsletter: bannerImage,
       logo: firstFilled(row.client_profile_image_url, row.logo_url, row.hero_image_url),
       favicon: firstFilled(row.client_profile_image_url, row.logo_url),
       hasProfileImage,
       hasLogoImage,
+      fallback: fallbackImage,
     },
     programs: programs.length ? programs : DEFAULT_SITE.programs,
     impacts,

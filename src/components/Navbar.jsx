@@ -54,6 +54,7 @@ export default function Navbar({ site }) {
               src={site?.images?.profile}
               alt={`${site?.ngoName || 'NGO'} profile`}
               className="nav-brand-avatar"
+              data-fallback-src={site?.images?.fallback}
               onError={imgFallback}
             />
             <span className="nav-brand-name">
