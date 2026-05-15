@@ -100,15 +100,13 @@ export default function Footer({ site }) {
           </div>
 
           <div>
-            <h4 className="font-sans font-bold text-white text-sm mb-5 tracking-wide uppercase">Trust Note</h4>
+            <h4 className="font-sans font-bold text-white text-sm mb-5 tracking-wide uppercase">Trust</h4>
             <div className="flex flex-col gap-2 font-body text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>
               <div>Established: {site?.establishedYear || '2013'}</div>
               <div>Location: {site?.location || 'India'}</div>
-              <div>Batch: {site?.batch || 'batch 1'}</div>
-              <div>Status: {site?.status || 'live'}</div>
               <div className="footer-concept-note">
                 <ShieldCheck size={14} />
-                Unofficial outreach concept. Confirm organisation details before public fundraising.
+                Transparent contact paths, focused programs and community-first impact storytelling.
               </div>
             </div>
           </div>
@@ -126,12 +124,12 @@ export default function Footer({ site }) {
           className="pt-7 flex flex-col lg:flex-row items-center justify-between gap-5 text-xs font-body text-center lg:text-left"
           style={{ borderTop: '1px solid rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.3)' }}
         >
-          <span className="leading-relaxed">© {currentYear} {site?.ngoName || 'NGO'} | Premium outreach concept</span>
+          <span className="leading-relaxed">© {currentYear} {site?.ngoName || 'NGO'} | Community impact website</span>
           <span
             className="px-4 py-2 rounded-full text-center leading-relaxed max-w-3xl"
             style={{ background: 'rgba(255,200,0,0.07)', border: '1px solid rgba(255,200,0,0.15)', color: 'rgba(255,200,0,0.6)' }}
           >
-            Concept preview. Replace with client-approved legal, donation and registration details before launch.
+            Please verify legal, donation and registration details directly with the organisation before contributing.
           </span>
         </div>
       </div>

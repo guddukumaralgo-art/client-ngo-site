@@ -140,7 +140,7 @@ export default function Cause({ site }) {
           >
             <ShieldCheck size={16} style={{ color: accent }} />
             <span className="font-body text-sm font-medium text-white/80">
-              Outreach concept with donor-friendly storytelling and clear contact paths.
+              Donor-friendly storytelling with clear, trusted contact paths.
             </span>
           </div>
         </motion.div>

@@ -11,7 +11,7 @@ export default function FloatingDonate({ site }) {
     const onScroll = () => {
       const footer = document.querySelector('footer')
       const footerTop = footer?.getBoundingClientRect().top ?? Number.POSITIVE_INFINITY
-      const clearOfFooter = footerTop > window.innerHeight - 96
+      const clearOfFooter = footerTop > window.innerHeight
 
       setVisible(window.scrollY > 400 && clearOfFooter)
     }

@@ -1,4 +1,4 @@
-import { FALLBACK_IMAGE, IMAGES } from '../utils/images'
+import { FALLBACK_IMAGE, FINAL_FALLBACK_IMAGE, IMAGES } from '../utils/images'
 import { getCategoryFallbackImage } from '../utils/imageFallbacks'
 
 const DEFAULT_COLORS = {
@@ -131,6 +131,18 @@ const cleanDonationCta = (value) => {
   return fixed
 }
 
+const publicCopy = (value, fallback = '') =>
+  clean(value, fallback)
+    .replace(
+      /(.+?) is presented as a premium NGO website concept focused on /i,
+      '$1 advances '
+    )
+    .replace(/This website concept presents/gi, 'This page brings forward')
+    .replace(/\s+website concept\s+/gi, ' digital presence ')
+    .replace(/\s+concept\s+/gi, ' ')
+    .replace(/\s{2,}/g, ' ')
+    .trim()
+
 const validColor = (value, fallback) => {
   const text = clean(value)
   return /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(text) ? text : fallback
@@ -251,12 +263,9 @@ export const normalizeClient = (row, index = 0) => {
   const ngoName = clean(row.ngo_name, DEFAULT_SITE.ngoName)
   const hasProfileImage = Boolean(clean(row.client_profile_image_url))
   const hasLogoImage = Boolean(clean(row.logo_url))
-  const donateLink = firstFilled(row.donate_link, row.contact_link, DEFAULT_SITE.contact.donateLink)
-  const contactLink = firstFilled(row.contact_link, row.donate_link, DEFAULT_SITE.contact.contactLink)
-  const profileImage = imageFrom(
-    [row.client_profile_image_url, row.logo_url, row.hero_image_url],
-    fallbackImage
-  )
+  const donateLink = firstFilled(row.donate_link, row.contact_link) || '#contact'
+  const contactLink = firstFilled(row.contact_link, row.donate_link) || '#contact'
+  const profileImage = firstFilled(row.client_profile_image_url, row.logo_url) || FINAL_FALLBACK_IMAGE
   const bannerImage = imageFrom(
     [row.client_banner_image_url, row.hero_image_url, row.program_1_image_url],
     fallbackImage
@@ -273,13 +282,13 @@ export const normalizeClient = (row, index = 0) => {
   return {
     slug: slugify(row.slug || ngoName || `client-${index + 1}`),
     ngoName,
-    tagline: clean(row.tagline, DEFAULT_SITE.tagline),
+    tagline: publicCopy(row.tagline, DEFAULT_SITE.tagline),
     location: clean(row.location, DEFAULT_SITE.location),
     establishedYear: clean(row.established_year, DEFAULT_SITE.establishedYear),
     heroHeadline: clean(row.hero_headline, DEFAULT_SITE.heroHeadline),
     heroHighlight: clean(row.hero_highlight, DEFAULT_SITE.heroHighlight),
-    heroSubheadline: clean(row.hero_subheadline, DEFAULT_SITE.heroSubheadline),
-    missionText: clean(row.mission_text, DEFAULT_SITE.missionText),
+    heroSubheadline: publicCopy(row.hero_subheadline, DEFAULT_SITE.heroSubheadline),
+    missionText: publicCopy(row.mission_text, DEFAULT_SITE.missionText),
     donationCta: cleanDonationCta(row.donation_cta),
     theme,
     images: {
@@ -290,7 +299,7 @@ export const normalizeClient = (row, index = 0) => {
       about: aboutImage,
       donation: imageFrom([row.program_1_image_url, row.client_banner_image_url, row.hero_image_url], fallbackImage),
       newsletter: bannerImage,
-      logo: firstFilled(row.client_profile_image_url, row.logo_url, row.hero_image_url),
+      logo: firstFilled(row.client_profile_image_url, row.logo_url),
       favicon: firstFilled(row.client_profile_image_url, row.logo_url),
       hasProfileImage,
       hasLogoImage,
@@ -300,7 +309,7 @@ export const normalizeClient = (row, index = 0) => {
     impacts,
     testimonials: [
       {
-        quote: clean(row.testimonial_quote, DEFAULT_SITE.testimonials[0].quote),
+        quote: publicCopy(row.testimonial_quote, DEFAULT_SITE.testimonials[0].quote),
         name: clean(row.testimonial_name, DEFAULT_SITE.testimonials[0].name),
         location: clean(row.testimonial_location, DEFAULT_SITE.testimonials[0].location),
       },

@@ -44,6 +44,7 @@ const headlineWords = (headline) => String(headline || 'Empowering Rural India,'
 export default function Hero({ site }) {
   const accent = site?.theme?.accent || '#c9a84c'
   const primary = site?.theme?.primary || '#0a6847'
+  const words = headlineWords(site?.heroHeadline)
   const stats = (site?.impacts || []).slice(0, 4).map((impact) => ({
     ...splitMetric(impact.number),
     label: impact.label,
@@ -52,156 +53,167 @@ export default function Hero({ site }) {
   const programProps = internalScrollProps('#programs', 'programs')
   const trustBadges = [
     { label: 'Community Impact', icon: UsersRound },
-    { label: 'Verified Concept', icon: BadgeCheck },
-    { label: 'Built for Outreach', icon: ShieldCheck },
+    { label: 'Outreach Ready', icon: BadgeCheck },
+    { label: 'Support Driven', icon: ShieldCheck },
   ]
 
   return (
     <section id="home" className="hero-section" style={{ '--hero-accent': accent, '--hero-primary': primary }}>
-      {/* BG image with Ken Burns */}
-      <div className="absolute inset-0 overflow-hidden">
-        <img
-          src={site?.images?.hero || IMAGES.hero}
-          alt={`${site?.ngoName || 'NGO'} hero`}
-          data-fallback-src={site?.images?.fallback}
-          onError={imgFallback}
-          className="w-full h-[110%] object-cover ken-burns hero-bg-image"
-          style={{ transformOrigin: 'center center' }}
-          loading="eager"
-          decoding="async"
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              'linear-gradient(to right, rgba(6,13,9,0.93) 0%, rgba(6,13,9,0.78) 45%, rgba(6,13,9,0.42) 100%), ' +
-              'linear-gradient(to top, rgba(6,13,9,0.72) 0%, transparent 45%)',
-          }}
-        />
-      </div>
+      <div className="hero-ambient" aria-hidden="true" />
 
       {/* Main content */}
       <div className="hero-content section-container">
-        {/* Gold tag */}
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mb-4 self-start"
-        >
-          <span
-            className="section-label"
-            style={{
-              color: accent,
-              borderColor: 'rgba(201,168,76,0.35)',
-              background: 'rgba(201,168,76,0.1)',
-              border: '1px solid rgba(201,168,76,0.35)',
-            }}
-          >
-            Since {site?.establishedYear || '2013'} • {site?.location || 'India'}
-          </span>
-        </motion.div>
+        <div className="hero-editorial-grid">
+          <div className="hero-copy-column">
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="mb-4 self-start"
+            >
+              <span
+                className="section-label"
+                style={{
+                  color: accent,
+                  borderColor: 'rgba(201,168,76,0.35)',
+                  background: 'rgba(201,168,76,0.1)',
+                  border: '1px solid rgba(201,168,76,0.35)',
+                }}
+              >
+                Since {site?.establishedYear || '2013'} • {site?.location || 'India'}
+              </span>
+            </motion.div>
 
-        <motion.div
-          className="hero-identity"
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15, duration: 0.55 }}
-        >
-          <img
-            src={site?.images?.profile}
-            alt={`${site?.ngoName || 'NGO'} profile`}
-            data-fallback-src={site?.images?.fallback}
-            onError={imgFallback}
-            loading="eager"
-            decoding="async"
-          />
-          <div>
-            <span>{site?.ngoName || 'NGO'}</span>
-            <small>{site?.tagline || 'Community-led impact'}</small>
-          </div>
-        </motion.div>
+            <motion.div
+              className="hero-identity"
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15, duration: 0.55 }}
+            >
+              <img
+                src={site?.images?.profile}
+                alt={`${site?.ngoName || 'NGO'} profile`}
+                data-fallback-src={site?.images?.fallback}
+                onError={imgFallback}
+                loading="eager"
+                decoding="async"
+              />
+              <div>
+                <span>{site?.ngoName || 'NGO'}</span>
+                <small>{site?.tagline || 'Community-led impact'}</small>
+              </div>
+            </motion.div>
 
-        {/* Headline */}
-        <h1 className="hero-title font-sans font-extrabold text-white mb-4">
-          <div className="flex flex-wrap" style={{ gap: '0 0.3em', marginBottom: '0.1em' }}>
-            {headlineWords(site?.heroHeadline).map((word, i) => (
+            <h1 className="hero-title font-sans font-extrabold text-white mb-4">
+              <div className="flex flex-wrap" style={{ gap: '0 0.3em', marginBottom: '0.1em' }}>
+                {words.map((word, i) => (
+                  <motion.span
+                    key={`${word}-${i}`}
+                    className="inline-block"
+                    initial={{ opacity: 0, y: 40 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.14 + i * 0.07, duration: 0.58, ease: [0.4, 0, 0.2, 1] }}
+                  >
+                    {word}{i < words.length - 1 ? ' ' : ''}
+                  </motion.span>
+                ))}
+              </div>
               <motion.span
-                key={`${word}-${i}`}
-                className="inline-block"
+                className="hero-title-accent hero-highlight-text italic inline-block"
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 + i * 0.15, duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
+                transition={{ delay: 0.26 + words.length * 0.055, duration: 0.58, ease: [0.4, 0, 0.2, 1] }}
               >
-                {word}
+                {site?.heroHighlight || 'Changing Lives.'}
               </motion.span>
-            ))}
+            </h1>
+
+            <motion.p
+              className="hero-copy font-body text-white/72 mt-2 mb-8 leading-relaxed"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.52, duration: 0.55 }}
+            >
+              {site?.heroSubheadline || 'Delivering clean water, education, healthcare and women empowerment across 200+ villages in rural India.'}
+            </motion.p>
+
+            <motion.div
+              className="hero-trust-row"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.62, duration: 0.5 }}
+            >
+              {trustBadges.map(({ label, icon: Icon }) => (
+                <span key={label} className="hero-trust-badge">
+                  <Icon size={15} />
+                  {label}
+                </span>
+              ))}
+            </motion.div>
+
+            <motion.div
+              className="hero-actions"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.72, duration: 0.5 }}
+            >
+              <a
+                {...donateProps}
+                className="premium-button premium-button--gold"
+              >
+                <HeartHandshake size={18} />
+                <span>Support This Cause</span>
+              </a>
+              <a
+                {...programProps}
+                className="premium-button premium-button--ghost"
+              >
+                <span>See Our Programs</span>
+                <ArrowRight size={17} />
+              </a>
+            </motion.div>
+
+            <motion.p
+              className="hero-cta-note"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.82, duration: 0.5 }}
+            >
+              Every contribution helps this mission reach one more family.
+            </motion.p>
           </div>
-          <motion.span
-            className="hero-title-accent hero-highlight-text italic inline-block"
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 + headlineWords(site?.heroHeadline).length * 0.15, duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
+
+          <motion.div
+            className="hero-visual-wrap"
+            initial={{ opacity: 0, x: 34 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.35, duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
           >
-            {site?.heroHighlight || 'Changing Lives.'}
-          </motion.span>
-        </h1>
-
-        {/* Sub */}
-        <motion.p
-          className="hero-copy font-body text-white/72 mt-2 mb-8 leading-relaxed"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.9, duration: 0.7 }}
-        >
-          {site?.heroSubheadline || 'Delivering clean water, education, healthcare and women empowerment across 200+ villages in rural India.'}
-        </motion.p>
-
-        <motion.div
-          className="hero-trust-row"
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1, duration: 0.55 }}
-        >
-          {trustBadges.map(({ label, icon: Icon }) => (
-            <span key={label} className="hero-trust-badge">
-              <Icon size={15} />
-              {label}
-            </span>
-          ))}
-        </motion.div>
-
-        {/* Buttons */}
-        <motion.div
-          className="hero-actions"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.1, duration: 0.6 }}
-        >
-          <a
-            {...donateProps}
-            className="premium-button premium-button--gold"
-          >
-            <HeartHandshake size={18} />
-            <span>Support This Cause</span>
-          </a>
-          <a
-            {...programProps}
-            className="premium-button premium-button--ghost"
-          >
-            <span>See Our Programs</span>
-            <ArrowRight size={17} />
-          </a>
-        </motion.div>
-
-        <motion.p
-          className="hero-cta-note"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.25, duration: 0.6 }}
-        >
-          Every contribution helps this mission reach one more family.
-        </motion.p>
+            <div className="hero-visual-card">
+              <img
+                src={site?.images?.hero || IMAGES.hero}
+                alt={`${site?.ngoName || 'NGO'} community impact`}
+                data-fallback-src={site?.images?.fallback}
+                onError={imgFallback}
+                className="hero-main-image"
+                loading="eager"
+                decoding="async"
+              />
+              <div className="hero-image-overlay" />
+              <div className="hero-image-caption">
+                <img
+                  src={site?.images?.profile}
+                  alt=""
+                  data-fallback-src={site?.images?.fallback}
+                  onError={imgFallback}
+                  loading="eager"
+                  decoding="async"
+                />
+                <span>Field stories from {site?.location || 'India'}</span>
+              </div>
+            </div>
+          </motion.div>
+        </div>
       </div>
 
       {/* Stats bar */}

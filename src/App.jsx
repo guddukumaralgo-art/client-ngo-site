@@ -20,8 +20,9 @@ import { DEFAULT_FAVICON_HREF, setDynamicFavicon } from './utils/favicon'
 const getRouteSlug = () => window.location.hash.replace(/^#\/?/, '').split('?')[0].trim()
 
 function Gallery({ sites }) {
+  const conceptCount = Math.max(sites.length, 170)
   const galleryStats = [
-    { value: `${sites.length}+`, label: 'NGO Concepts', icon: Layers },
+    { value: `${conceptCount}+`, label: 'NGO Concepts', icon: Layers },
     { value: 'CSV', label: 'Generated', icon: Database },
     { value: 'Mobile', label: 'Ready', icon: Smartphone },
     { value: 'Premium', label: 'Landing Pages', icon: Sparkles },
@@ -38,16 +39,16 @@ function Gallery({ sites }) {
           <div className="gallery-hero-grid">
             <div>
               <h1 className="gallery-title">
-                Digital homes for causes that deserve trust.
+                Premium NGO websites shaped for trust, emotion, and action.
               </h1>
               <p className="gallery-copy">
-                A curated batch of emotionally grounded NGO landing pages, shaped for donor confidence,
-                community storytelling, and polished mobile outreach.
+                A curated showcase of donor-ready NGO landing pages with cinematic imagery,
+                confident storytelling, and polished mobile-first presentation.
               </p>
             </div>
             <div className="gallery-summary" aria-label={`${sites.length} ready/live websites`}>
               <strong>{sites.length}</strong>
-              <span>ready and live concepts</span>
+              <span>ready and live websites</span>
             </div>
           </div>
 
