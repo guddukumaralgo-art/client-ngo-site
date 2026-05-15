@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">NGO fallback banner</title>
+  <desc id="desc">A premium green and gold banner for community impact websites.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#04130d"/>
+      <stop offset="0.48" stop-color="#123d2d"/>
+      <stop offset="1" stop-color="#070b08"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#ffe9a8"/>
+      <stop offset="1" stop-color="#c7a646"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <path d="M0 655c218-82 427-113 627-93 296 30 575-46 973-229v567H0Z" fill="#0b2d22" opacity="0.75"/>
+  <path d="M0 741c270-68 522-77 756-26 266 57 519 20 844-118v303H0Z" fill="#071b14" opacity="0.86"/>
+  <circle cx="1262" cy="178" r="126" fill="#c7a646" opacity="0.14"/>
+  <circle cx="244" cy="232" r="184" fill="#ffffff" opacity="0.055"/>
+  <g transform="translate(690 244)">
+    <path d="M112 283C38 235-38 170-38 81c0-56 45-101 101-101 30 0 57 13 76 34 18-21 45-34 75-34 56 0 101 45 101 101 0 89-76 154-149 202l-27 17Z" fill="url(#gold)"/>
+    <path d="M33 124c43 36 90 48 142 35 45-11 82-38 110-80-5 75-70 136-146 179-58-32-106-76-106-134Z" fill="#fff6d8" opacity="0.26"/>
+  </g>
+  <g fill="none" stroke="#f5dda0" stroke-linecap="round" stroke-width="16" opacity="0.78">
+    <path d="M512 642c74-52 148-78 223-78"/>
+    <path d="M1088 642c-74-52-148-78-223-78"/>
+  </g>
+</svg>

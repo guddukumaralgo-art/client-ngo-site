@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 import { internalScrollProps, scrollToId } from '../utils/links'
+import { imgFallback } from '../utils/images'
 
 const links = ['Home', 'About', 'Programs', 'Impact', 'Team', 'Contact']
 
@@ -43,20 +44,22 @@ export default function Navbar({ site }) {
           {/* Logo */}
           <a
             href="#"
-            className="flex min-w-0 items-center gap-1 font-sans font-bold text-xl leading-none select-none"
+            className="nav-brand font-sans font-bold text-xl leading-none select-none"
             onClick={(event) => {
               event.preventDefault()
               scrollToId('home')
             }}
           >
-            {site?.images?.logo ? (
-              <img src={site.images.logo} alt={site.ngoName} className="h-8 max-w-[180px] object-contain" />
-            ) : (
-              <>
-                <span className="text-white">{brand.first}</span>
-                <span style={{ color: accent }}>{brand.rest}</span>
-              </>
-            )}
+            <img
+              src={site?.images?.profile}
+              alt={`${site?.ngoName || 'NGO'} profile`}
+              className="nav-brand-avatar"
+              onError={imgFallback}
+            />
+            <span className="nav-brand-name">
+              <span className="text-white">{brand.first}</span>
+              {brand.rest && <span style={{ color: accent }}>{brand.rest}</span>}
+            </span>
           </a>
 
           {/* Desktop links */}

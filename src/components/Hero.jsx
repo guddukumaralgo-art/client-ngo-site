@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowRight, HeartHandshake } from 'lucide-react'
-import { IMAGES, imgFallback } from '../utils/images'
+import { FALLBACK_BANNER, IMAGES, imgFallback } from '../utils/images'
 import { splitMetric } from '../data/ngoData'
 import { internalScrollProps } from '../utils/links'
 
-function Counter({ target, suffix }) {
+function Counter({ target, prefix = '', suffix = '' }) {
   const [count, setCount] = useState(0)
   const ref = useRef(null)
   const started = useRef(false)
@@ -34,7 +34,7 @@ function Counter({ target, suffix }) {
 
   return (
     <span ref={ref} className="tabular-nums">
-      {count.toLocaleString('en-IN')}{suffix}
+      {prefix}{count.toLocaleString('en-IN')}{suffix}
     </span>
   )
 }
@@ -56,6 +56,7 @@ export default function Hero({ site }) {
         <img
           src={site?.images?.hero || IMAGES.hero}
           alt={`${site?.ngoName || 'NGO'} hero`}
+          data-fallback-src={FALLBACK_BANNER}
           onError={imgFallback}
           className="w-full h-[110%] object-cover ken-burns"
           style={{ transformOrigin: 'center center' }}
@@ -77,7 +78,7 @@ export default function Hero({ site }) {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="mb-6 self-start"
+          className="mb-4 self-start"
         >
           <span
             className="section-label"
@@ -90,6 +91,23 @@ export default function Hero({ site }) {
           >
             Since {site?.establishedYear || '2013'} • {site?.location || 'India'}
           </span>
+        </motion.div>
+
+        <motion.div
+          className="hero-identity"
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15, duration: 0.55 }}
+        >
+          <img
+            src={site?.images?.profile}
+            alt={`${site?.ngoName || 'NGO'} profile`}
+            onError={imgFallback}
+          />
+          <div>
+            <span>{site?.ngoName || 'NGO'}</span>
+            <small>{site?.tagline || 'Community-led impact'}</small>
+          </div>
         </motion.div>
 
         {/* Headline */}
@@ -163,13 +181,13 @@ export default function Hero({ site }) {
           transition={{ delay: 1.4, duration: 0.7 }}
         >
           <div className="hero-stats-card">
-            {stats.map(({ value, suffix, label }) => (
+            {stats.map(({ value, prefix, suffix, label }) => (
               <div key={label} className="hero-stat">
                 <span
                   className="font-sans font-extrabold"
                   style={{ fontSize: '2rem', color: accent }}
                 >
-                  <Counter target={value} suffix={suffix} />
+                  <Counter target={value} prefix={prefix} suffix={suffix} />
                 </span>
                 <span
                   className="font-body text-white/70 mt-1.5 tracking-wide text-center"

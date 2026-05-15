@@ -15,6 +15,7 @@ import Footer from './components/Footer'
 import FloatingDonate from './components/FloatingDonate'
 import { DEFAULT_SITE, loadNgoClients } from './data/ngoData'
 import { imgFallback } from './utils/images'
+import { DEFAULT_FAVICON_HREF, setDynamicFavicon } from './utils/favicon'
 
 const getRouteSlug = () => window.location.hash.replace(/^#\/?/, '').split('?')[0].trim()
 
@@ -23,11 +24,11 @@ function Gallery({ sites }) {
     <main className="gallery-page">
       <section className="section-container gallery-shell">
         <div className="gallery-hero">
-          <span className="section-label gallery-label">CSV Batch Generator</span>
           <h1 className="gallery-title">NGO Website Batch Gallery</h1>
-          <p className="gallery-copy">
-            Premium NGO landing pages generated from <span>public/data/ngo_clients.csv</span>.
-          </p>
+          <div className="gallery-summary" aria-label={`${sites.length} ready/live websites`}>
+            <strong>{sites.length}</strong>
+            <span>ready/live websites</span>
+          </div>
         </div>
 
         <div className="gallery-grid">
@@ -39,7 +40,7 @@ function Gallery({ sites }) {
               style={{ '--card-accent': site.theme.accent, '--card-primary': site.theme.primary }}
             >
               <div className="gallery-card-media">
-                <img src={site.images.hero} alt={`${site.ngoName} preview`} onError={imgFallback} />
+                <img src={site.images.gallery} alt={`${site.ngoName} preview`} onError={imgFallback} />
                 <div />
                 <span>{site.status}</span>
               </div>
@@ -127,6 +128,14 @@ export default function App() {
     () => sites.find((site) => site.slug === routeSlug),
     [routeSlug, sites]
   )
+
+  useEffect(() => {
+    const activeSite = routeSlug && selectedSite ? selectedSite : null
+    setDynamicFavicon(activeSite?.images?.favicon || DEFAULT_FAVICON_HREF)
+    document.title = activeSite
+      ? `${activeSite.ngoName} | NGO Website`
+      : 'NGO Website Batch Gallery'
+  }, [routeSlug, selectedSite])
 
   if (loading) {
     return (

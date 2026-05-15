@@ -1,4 +1,5 @@
 import { internalScrollProps } from '../utils/links'
+import { imgFallback } from '../utils/images'
 
 const SOCIAL = [
   { name: 'Facebook', href: '#', path: 'M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z' },
@@ -29,9 +30,17 @@ export default function Footer({ site }) {
       <div className="section-container footer-shell">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-14 mb-14">
           <div className="flex flex-col gap-4 max-w-sm">
-            <div className="font-sans font-bold text-2xl">
-              <span className="text-white">{brand.first}</span>
-              {brand.rest && <span style={{ color: accent }}> {brand.rest}</span>}
+            <div className="footer-brand-row">
+              <img
+                src={site?.images?.profile}
+                alt={`${site?.ngoName || 'NGO'} profile`}
+                className="footer-brand-avatar"
+                onError={imgFallback}
+              />
+              <div className="font-sans font-bold text-2xl leading-tight">
+                <span className="text-white">{brand.first}</span>
+                {brand.rest && <span style={{ color: accent }}> {brand.rest}</span>}
+              </div>
             </div>
             <p className="font-body text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.4)' }}>
               {site?.tagline || 'Community-led impact for families and villages.'}

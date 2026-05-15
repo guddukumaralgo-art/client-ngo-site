@@ -1,4 +1,7 @@
-export const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=600&q=80'
+const BASE_URL = import.meta.env?.BASE_URL || '/'
+
+export const FALLBACK_IMAGE = `${BASE_URL}fallback-ngo.svg`
+export const FALLBACK_BANNER = `${BASE_URL}fallback-banner.svg`
 
 export const IMAGES = {
   hero: 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=1920&q=80',
@@ -14,5 +17,6 @@ export const IMAGES = {
 }
 
 export const imgFallback = (e) => {
-  if (e.target.src !== FALLBACK_IMAGE) e.target.src = FALLBACK_IMAGE
+  const fallback = e.currentTarget.dataset.fallbackSrc || FALLBACK_IMAGE
+  if (e.currentTarget.src !== fallback) e.currentTarget.src = fallback
 }

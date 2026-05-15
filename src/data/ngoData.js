@@ -1,4 +1,4 @@
-import { FALLBACK_IMAGE, IMAGES } from '../utils/images'
+import { FALLBACK_BANNER, FALLBACK_IMAGE, IMAGES } from '../utils/images'
 
 const DEFAULT_COLORS = {
   primary: '#0a6847',
@@ -20,10 +20,16 @@ const DEFAULT_SITE = {
   theme: DEFAULT_COLORS,
   images: {
     hero: IMAGES.hero,
+    banner: IMAGES.hero,
+    profile: FALLBACK_IMAGE,
+    gallery: FALLBACK_IMAGE,
     about: IMAGES.about,
     donation: IMAGES.donation,
     newsletter: IMAGES.newsletter,
     logo: '',
+    favicon: '',
+    hasProfileImage: false,
+    hasLogoImage: false,
   },
   programs: [
     {
@@ -82,9 +88,45 @@ const DEFAULT_SITE = {
 
 const ICON_IMAGES = [IMAGES.cleanWater, IMAGES.education, IMAGES.healthcare, IMAGES.womenEmpowerment]
 
+const MOJIBAKE_REPLACEMENTS = [
+  [/‚Çπ/g, '₹'],
+  [/â‚¹/g, '₹'],
+  [/‚Ä¶/g, '...'],
+  [/â€¦/g, '...'],
+  [/‚Äô/g, "'"],
+  [/â€™/g, "'"],
+  [/‚Äú/g, '"'],
+  [/‚Äù/g, '"'],
+  [/â€œ/g, '"'],
+  [/â€/g, '"'],
+  [/â€“/g, '-'],
+  [/â€”/g, '-'],
+  [/Â/g, ''],
+]
+
+const fixEncoding = (value) =>
+  MOJIBAKE_REPLACEMENTS.reduce(
+    (text, [pattern, replacement]) => text.replace(pattern, replacement),
+    String(value ?? '')
+  )
+
 const clean = (value, fallback = '') => {
-  const text = String(value ?? '').trim()
+  const text = fixEncoding(value).trim()
   return text || fallback
+}
+
+const cleanHeader = (value) => clean(value).replace(/^\uFEFF/, '')
+
+const firstFilled = (...values) => values.map((value) => clean(value)).find(Boolean) || ''
+
+const imageFrom = (values, fallback = FALLBACK_IMAGE) => firstFilled(...values) || fallback
+
+const cleanDonationCta = (value) => {
+  const raw = String(value ?? '')
+  const fixed = clean(raw, DEFAULT_SITE.donationCta).replace(/\s+/g, ' ')
+
+  if (/[âÇπ‚]/.test(fixed)) return 'Support This Cause'
+  return fixed
 }
 
 const validColor = (value, fallback) => {
@@ -108,13 +150,14 @@ export const initialsFromName = (name) =>
 
 export const splitMetric = (value) => {
   const raw = clean(value, '0')
-  const match = raw.replace(/,/g, '').match(/^(\d+(?:\.\d+)?)(.*)$/)
+  const match = raw.replace(/,/g, '').match(/^([^0-9]*)(\d+(?:\.\d+)?)(.*)$/)
 
-  if (!match) return { value: 0, suffix: raw }
+  if (!match) return { value: 0, prefix: '', suffix: raw }
 
   return {
-    value: Number(match[1]),
-    suffix: clean(match[2]),
+    value: Number(match[2]),
+    prefix: clean(match[1]),
+    suffix: clean(match[3]),
   }
 }
 
@@ -155,7 +198,8 @@ export const parseCsv = (text) => {
   const [headers = [], ...records] = rows
   return records.map((record) =>
     headers.reduce((entry, header, index) => {
-      entry[header.trim()] = clean(record[index])
+      const key = cleanHeader(header)
+      if (key) entry[key] = clean(record[index])
       return entry
     }, {})
   )
@@ -192,6 +236,20 @@ export const normalizeClient = (row, index = 0) => {
     .filter((member) => member.name && member.role)
 
   const ngoName = clean(row.ngo_name, DEFAULT_SITE.ngoName)
+  const hasProfileImage = Boolean(clean(row.client_profile_image_url))
+  const hasLogoImage = Boolean(clean(row.logo_url))
+  const profileImage = imageFrom(
+    [row.client_profile_image_url, row.logo_url, row.hero_image_url],
+    FALLBACK_IMAGE
+  )
+  const bannerImage = imageFrom(
+    [row.client_banner_image_url, row.hero_image_url, row.program_1_image_url],
+    FALLBACK_BANNER
+  )
+  const galleryImage = imageFrom(
+    [row.client_banner_image_url, row.client_profile_image_url, row.hero_image_url, row.program_1_image_url],
+    FALLBACK_IMAGE
+  )
 
   return {
     slug: slugify(row.slug || ngoName || `client-${index + 1}`),
@@ -203,14 +261,20 @@ export const normalizeClient = (row, index = 0) => {
     heroHighlight: clean(row.hero_highlight, DEFAULT_SITE.heroHighlight),
     heroSubheadline: clean(row.hero_subheadline, DEFAULT_SITE.heroSubheadline),
     missionText: clean(row.mission_text, DEFAULT_SITE.missionText),
-    donationCta: clean(row.donation_cta, DEFAULT_SITE.donationCta),
+    donationCta: cleanDonationCta(row.donation_cta),
     theme,
     images: {
-      hero: clean(row.hero_image_url, DEFAULT_SITE.images.hero),
+      hero: bannerImage,
+      banner: bannerImage,
+      profile: profileImage,
+      gallery: galleryImage,
       about: clean(row.program_2_image_url, DEFAULT_SITE.images.about),
       donation: clean(row.program_1_image_url, DEFAULT_SITE.images.donation),
-      newsletter: clean(row.hero_image_url, DEFAULT_SITE.images.newsletter),
-      logo: clean(row.logo_url),
+      newsletter: bannerImage,
+      logo: firstFilled(row.client_profile_image_url, row.logo_url, row.hero_image_url),
+      favicon: firstFilled(row.client_profile_image_url, row.logo_url),
+      hasProfileImage,
+      hasLogoImage,
     },
     programs: programs.length ? programs : DEFAULT_SITE.programs,
     impacts,
@@ -239,7 +303,7 @@ export const visibleSites = (sites) =>
 
 export const loadNgoClients = async () => {
   try {
-    const response = await fetch(`${import.meta.env.BASE_URL}data/ngo_clients.csv`, { cache: 'no-store' })
+    const response = await fetch(`${import.meta.env?.BASE_URL || '/'}data/ngo_clients.csv`, { cache: 'no-store' })
     if (!response.ok) throw new Error(`CSV request failed: ${response.status}`)
     const rows = parseCsv(await response.text())
     const sites = visibleSites(rows.map(normalizeClient))

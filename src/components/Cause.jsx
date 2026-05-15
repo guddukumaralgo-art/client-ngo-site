@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { HeartHandshake, ShieldCheck } from 'lucide-react'
-import { IMAGES, imgFallback } from '../utils/images'
+import { FALLBACK_BANNER, IMAGES, imgFallback } from '../utils/images'
 import { internalScrollProps } from '../utils/links'
 
 function fmt(n) {
@@ -35,6 +35,7 @@ export default function Cause({ site }) {
       <img
         src={site?.images?.donation || IMAGES.donation}
         alt="Donation and community"
+        data-fallback-src={FALLBACK_BANNER}
         onError={imgFallback}
         className="absolute inset-0 w-full h-full object-cover"
       />
